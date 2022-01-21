@@ -1,0 +1,28 @@
+import numpy as np
+
+def lup(A):
+    
+    """
+    A is non-singular m x m
+    """
+    U = A.copy().astype(float)
+    
+    # Number of Rows
+    m = U.shape[0]
+    
+    # Identity Matrix of Size m
+    L = np.identity(m).astype(float)
+    P = np.identity(m).astype(float)
+
+    for j in range(m-1):
+            # Pivot
+            big = np.argmax(U, axis=1)[j]
+            U[[j, big]] = U[[big, j]]
+            L[[j, big]] = L[[big, j]]
+            P[[j, big]] = P[[big, j]]
+            for k in range(j, m-1):
+                # Reduce
+                factor = (U.item(k+1, j))/(U.item(j, j))
+                L[k+1, j] = factor
+                U[k+1] = -factor*U[j] + U[k+1]
+    return L, U, P
