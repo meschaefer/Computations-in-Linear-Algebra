@@ -1,0 +1,58 @@
+import numpy as np
+
+def lusolve(A, b):
+
+"""
+Solve Ax = b
+"""
+    
+    def lu(A):
+    
+        """
+        A is non-singular m x m
+        """
+        U = A.copy().astype(float)
+    
+        # Number of Rows
+        m = U.shape[0]
+    
+        # Identity Matrix of Size m
+        L = np.identity(m).astype(float)
+
+        for j in range(m-1):
+            for k in range(j, m-1):
+                factor = (U.item(k+1, j))/(U.item(j, j))
+                L[k+1, j] = factor
+                U[k+1] = -factor*U[j] + U[k+1]
+        return L, U
+
+    def fsub(L, b):
+    
+        # Number of Rows
+        m = L.shape[0]
+    
+        y = np.zeros_like(b, dtype=np.float);
+        y[0] = b[0] / L[0, 0]
+    
+        for k in range(1, m):
+            y[k] = (b[k] - np.dot(L[k,:k], y[:k])) / L[k,k]
+        return y
+
+    def bsub(U, y):
+    
+        # Number of rows
+        m = U.shape[0]
+    
+        x = np.zeros_like(y, dtype=np.float);
+        x[-1] = y[-1] / U[-1, -1]
+    
+        for k in range(m-2, -1, -1):
+            x[k] = (y[k] - np.dot(U[k,k:], x[k:])) / U[k,k]
+        return x
+
+    
+    L = lu(A)[0]
+    U = lu(A)[1]
+    y = fsub(L, b)
+    x = bsub(U, y)
+    return x
