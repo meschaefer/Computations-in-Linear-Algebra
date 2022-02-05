@@ -16,10 +16,9 @@ def lup(A):
 
     for j in range(m-1):
             # Pivot
-            big = np.argmax(U, axis=1)[j]
-            U[[j, big]] = U[[big, j]]
-            L[[j, big]] = L[[big, j]]
-            P[[j, big]] = P[[big, j]]
+            big = np.argmax(U, axis=1)[j-1]
+            U[[j-1, big]] = U[[big, j-1]]
+            P[[j-1, big]] = P[[big, j-1]]
             for k in range(j, m-1):
                 # Reduce
                 factor = (U.item(k+1, j))/(U.item(j, j))
